@@ -23,7 +23,11 @@
 .valley-day { font-size: 11px; color: var(--muted); }
 .valley-clock, .valley-energy { display: block; height: 5px; background: #d9d6cf; }
 .valley-clock i, .valley-energy i { display: block; height: 100%; background: var(--ink); transition: width .2s linear; }
-.valley-energy i { background: #8fa884; }
+.valley-energy i { background: repeating-linear-gradient(90deg, #8fa884 0 6px, #9db592 6px 12px); }
+.valley-energy, .valley-clock { position: relative; margin-left: 15px; overflow: visible; }
+.valley-energy::before, .valley-clock::before { position: absolute; left: -15px; top: -6px; font-size: 11px; line-height: 1; }
+.valley-energy::before { content: "♥"; color: #c27d78; }
+.valley-clock::before { content: "◷"; color: var(--muted); }
 .valley-energy.low i { background: #c27d78; }
 .valley-stats { display: flex; gap: 12px; font-size: 13px; white-space: nowrap; }
 .valley-actions { display: flex; gap: 6px; pointer-events: auto; flex-wrap: wrap; justify-content: flex-end; max-width: 60%; }

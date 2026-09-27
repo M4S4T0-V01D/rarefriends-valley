@@ -7,12 +7,14 @@
 
 ![RareFriends Valley: a greyscale isometric farm in summer with crops, a star windmill, a scarecrow and a golden statue of the player's Friend](docs/farm-summer.png)
 
+![Zoomed out: the farm as a little diorama island with earthen cliffs](docs/farm-island.png)
+
 - **Your Friend is the farmer.** The Friend you select farms with its canonical on-chain sprite, and its Generations family gives a farming perk.
 - **A full farming loop.** Clear weeds, rocks and stumps; till, plant and water. Crops grow overnight only if watered. Harvest, ship in the bin (paid each morning), and reinvest in seeds and tools.
 - **Seasons, days and weather.** Ten crops across spring, summer, autumn and winter (7 days each). A 6 am–2 am clock with dusk and glowing nights; rain and snow water your crops.
 - **Energy (fatigue).** Every tool costs energy. Tired Friends slow down; past 2 am you pass out. Eat crops or café food, or sleep.
 - **A town where every NPC is a Rare Friend.** Eight villagers with schedules, favourite gifts and hearts. Your *other owned Friends* move in too, with their canonical art, and water your crops once they like you.
-- **A rotating 2.5D camera.** Spin the valley in quarter turns.
+- **A rotating 2.5D camera.** Spin the valley in quarter turns with ← / → and zoom with ↑ / ↓ (or the mouse wheel). Zoom out and the valley is a little diorama island.
 - **Friend Films.** Record a clip: you get a looping GIF from the game's own encoder, plus a video *with the music* where the browser supports it. Post it to X. Every night also draws a diary card.
 - **$RAREFRIENDS blessings.** Moonlight Blessings cost (simulated) RF. Keep them for daily fertilizer, morning dew, better prices or golden crops, or redeem them for RF. Each also grants RF décor that boosts nearby crops.
 - **Progress saves per wallet.** Posts are tagged *@RareFriendsNFT #RareFriends #RareFriendsValley*.

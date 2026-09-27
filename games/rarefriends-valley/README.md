@@ -8,11 +8,12 @@ game module never connects wallets or discovers NFTs itself.
 
 | Action | Pointer / touch | Keyboard |
 | --- | --- | --- |
-| Walk | Tap a tile | WASD / arrows (screen-relative at any camera angle) |
+| Walk | Tap a tile | WASD (screen-relative at any camera angle) |
 | Use the current tool | Tap a tile (your Friend walks next to it first) | E / Space / Enter acts on the tile in front |
 | Pick a tool | Hotbar | 1 Hands · 2 Hoe · 3 Can · 4 Seeds (again: next packet) · 5 Fertilizer |
 | Talk, shop, ship, sleep | Tap a villager, a door, the bin or your house | Face it and press E |
-| Rotate the camera | ↺ ↻ | Q / R (or [ / ]) |
+| Rotate the camera | ↺ ↻ | ← / → (or Q / R) |
+| Zoom | Mouse wheel | ↑ / ↓ (or + / −) |
 | Bag (eat, pick seeds) | Bag | B or I |
 | Record a clip | ● Clip (tap ■ to stop early) | C |
 

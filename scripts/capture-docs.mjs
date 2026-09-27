@@ -66,7 +66,8 @@ try {
     await context.close();
   }
   await scene("farm-summer", farmSave());
-  await scene("farm-rotated", farmSave({ season: 0, minute: 9 * 60 }), { then: async page => { await page.keyboard.press("r"); await page.waitForTimeout(900); } });
+  await scene("farm-rotated", farmSave({ season: 0, minute: 9 * 60 }), { then: async page => { await page.keyboard.press("ArrowRight"); await page.waitForTimeout(900); } });
+  await scene("farm-island", farmSave({ season: 1, minute: 16 * 60 + 40, at: { x: 12, y: 10 } }), { then: async page => { for (let i = 0; i < 3; i++) await page.keyboard.press("ArrowDown"); await page.keyboard.press("ArrowLeft"); await page.waitForTimeout(1400); } });
   await scene("farm-autumn", farmSave({ season: 2, minute: 16 * 60 + 30 }));
   await scene("farm-winter", farmSave({ season: 3, minute: 13 * 60, weather: "snow" }));
   await scene("farm-night", farmSave({ season: 0, minute: 21 * 60 }));

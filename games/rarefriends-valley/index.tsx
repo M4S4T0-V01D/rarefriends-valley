@@ -31,10 +31,11 @@ import "./style.css";
 
 const GUESTS = createGuests(18);
 const rf = (value: bigint) => `${formatGameAmount(value, 18)} RF`;
+/** WASD walks (screen-relative). The arrow keys drive the camera: ← → rotate, ↑ ↓ zoom. */
 const DIRECTIONS: Record<string, { dx: number; dy: number }> = {
-  w: { dx: 0, dy: -1 }, arrowup: { dx: 0, dy: -1 }, s: { dx: 0, dy: 1 }, arrowdown: { dx: 0, dy: 1 },
-  a: { dx: -1, dy: 0 }, arrowleft: { dx: -1, dy: 0 }, d: { dx: 1, dy: 0 }, arrowright: { dx: 1, dy: 0 },
+  w: { dx: 0, dy: -1 }, s: { dx: 0, dy: 1 }, a: { dx: -1, dy: 0 }, d: { dx: 1, dy: 0 },
 };
+const ZOOM = { min: 0.85, max: 1.9, start: 1.25, step: 0.15 } as const;
 const TOOLS: readonly ToolId[] = ["hand", "hoe", "can", "seeds", "fertilizer"];
 /** Villagers with canonical sprites: Pip is #7730 (a Hoverer), Kumo is #3412 (a Skeleton). */
 const CANONICAL: Record<string, bigint> = { pip: 7730n, kumo: 3412n };
@@ -60,7 +61,7 @@ export default function RareFriendsValley({ friendId, client, paused }: GameComp
   const valley = useRef<ValleyState | null>(null), friend = useRef<GenerationSprites | null>(null);
   const ownedSprites = useRef(new Map<number, GenerationSprites>()), loadingSprites = useRef(new Set<number>());
   const floaters = useRef<Floater[]>([]), hover = useRef<Tile | null>(null), sound = useRef<FriendSoundKit | null>(null), audio = useRef<ValleyAudio | null>(null);
-  const cameraAngle = useRef({ current: 0, target: 0 }), focus = useRef({ x: 4, y: 6 }), view = useRef({ width: 960, height: 640, scale: 1 });
+  const cameraAngle = useRef({ current: 0, target: 0 }), zoom = useRef({ current: ZOOM.start as number, target: ZOOM.start as number }), focus = useRef({ x: 4, y: 6 }), view = useRef({ width: 960, height: 640, scale: 1 });
   const recorder = useRef(new ClipRecorder()), orbitFrom = useRef(0);
   const epoch = useRef(0), locked = useRef(false), linked = useRef(false), lastSave = useRef(""), bedPhoto = useRef<HTMLCanvasElement | null>(null);
   const shareTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -183,7 +184,8 @@ export default function RareFriendsValley({ friendId, client, paused }: GameComp
         if (Math.abs(focus.current.x - state.farmer.x) > 8 || Math.abs(focus.current.y - state.farmer.y) > 8) focus.current = { x: state.farmer.x, y: state.farmer.y };
         focus.current.x += (state.farmer.x - focus.current.x) * Math.min(1, dt * 5); focus.current.y += (state.farmer.y - focus.current.y) * Math.min(1, dt * 5);
         const { width, height, scale } = view.current;
-        const camera: Camera = { angle: angle.current, cx: world.width / 2, cy: world.height / 2, focusX: focus.current.x, focusY: focus.current.y, zoom: 1.25, width, height };
+        zoom.current.current += (zoom.current.target - zoom.current.current) * Math.min(1, dt * 8);
+        const camera: Camera = { angle: angle.current, cx: world.width / 2, cy: world.height / 2, focusX: focus.current.x, focusY: focus.current.y, zoom: zoom.current.current, width, height };
         cameraRef.current = camera;
         renderScene(ctx, {
           state, camera, now, reducedMotion: live.current.reducedMotion, friend: sprites, art: artFor, floaters: floaters.current,
@@ -329,6 +331,8 @@ export default function RareFriendsValley({ friendId, client, paused }: GameComp
     const state = valley.current;
     if (!state || event.target !== canvas.current) return;
     const key = event.key.toLowerCase();
+    if (key === "arrowleft" || key === "arrowright" || key === "q" || key === "r" || key === "[" || key === "]") { event.preventDefault(); if (!event.repeat) rotate(key === "arrowleft" || key === "q" || key === "[" ? -1 : 1); return; }
+    if (key === "arrowup" || key === "arrowdown" || key === "+" || key === "=" || key === "-") { event.preventDefault(); zoomBy(key === "arrowup" || key === "+" || key === "=" ? 1 : -1); return; }
     if (placing) {
       const cursor = placing.tile ?? frontTile(state);
       if (DIRECTIONS[key]) { event.preventDefault(); const d = screenToWorldDir(cameraAngle.current.target, DIRECTIONS[key].dx, DIRECTIONS[key].dy); setPlacing({ ...placing, tile: { x: cursor.x + d.dx, y: cursor.y + d.dy } }); }
@@ -336,8 +340,6 @@ export default function RareFriendsValley({ friendId, client, paused }: GameComp
       else if (key === "escape") { event.preventDefault(); setPlacing(null); }
       return;
     }
-    if (key === "q" || key === "[") { event.preventDefault(); rotate(-1); return; }
-    if (key === "r" || key === "]") { event.preventDefault(); rotate(1); return; }
     if (blocked) return;
     if (DIRECTIONS[key]) { event.preventDefault(); setManual(state, screenToWorldDir(cameraAngle.current.target, DIRECTIONS[key].dx, DIRECTIONS[key].dy)); return; }
     if (event.repeat) return;
@@ -354,6 +356,7 @@ export default function RareFriendsValley({ friendId, client, paused }: GameComp
     if (state.manual.dx === world.dx && state.manual.dy === world.dy) setManual(state, null);
   }
   function rotate(turn: number) { cameraAngle.current.target = Math.round(cameraAngle.current.target) + turn; audio.current?.select(); }
+  function zoomBy(steps: number) { zoom.current.target = Math.max(ZOOM.min, Math.min(ZOOM.max, zoom.current.target + steps * ZOOM.step)); }
   function chooseTool(tool: ToolId) {
     const state = valley.current;
     if (!state) return;
@@ -500,7 +503,7 @@ export default function RareFriendsValley({ friendId, client, paused }: GameComp
     data-tilled={state ? [...state.plots.values()].filter(plot => plot.tilled).length : 0} data-watered={state ? [...state.plots.values()].filter(plot => plot.watered).length : 0}>
     <div className="valley-world" inert={menu !== null || reveal !== null || paused || undefined}>
       <canvas ref={canvas} tabIndex={blocked && !placing ? -1 : 0}
-        aria-label={placing ? "Decorate: tap a tile (or use arrow keys and Enter) to place; Escape to stop." : "Your farm. Tap tiles to use your tool, tap villagers to talk. Keys: WASD or arrows walk, E acts, 1 to 5 pick tools, Q and R rotate the camera, B opens your bag, C records a clip."}
+        aria-label={placing ? "Decorate: tap a tile (or use WASD and Enter) to place; Escape to stop." : "Your farm. Tap tiles to use your tool, tap villagers to talk. Keys: WASD walk, E acts, 1 to 5 pick tools, left and right arrows rotate the camera, up and down arrows zoom, B opens your bag, C records a clip."}
         onPointerDown={tap}
         onPointerMove={event => {
           const state = valley.current, camera = cameraRef.current;
@@ -510,6 +513,7 @@ export default function RareFriendsValley({ friendId, client, paused }: GameComp
           hover.current = tile;
         }}
         onPointerLeave={() => { hover.current = null; }}
+        onWheel={event => { if (Math.abs(event.deltaY) > 2) zoomBy(event.deltaY < 0 ? 1 : -1); }}
         onKeyDown={keyDown} onKeyUp={keyUp} onBlur={() => { if (valley.current) setManual(valley.current, null); }} />
       {hud && <>
         <div className="valley-hud">
@@ -524,8 +528,8 @@ export default function RareFriendsValley({ friendId, client, paused }: GameComp
           {!placing && <div className="valley-actions">
             <button type="button" className={recording ? "valley-rec on" : "valley-rec"} disabled={encoding !== null || paused || hud.phase !== "play"} onClick={() => void toggleClip()} aria-label={recording ? "Stop recording" : "Record a clip"}>
               {recording ? `■ ${recording.toFixed(1)}s` : encoding !== null ? `GIF ${Math.round(encoding * 100)}%` : "● Clip"}</button>
-            <button type="button" className="valley-wide" onClick={() => rotate(-1)} aria-label="Rotate camera left" title="Rotate (Q)">↺</button>
-            <button type="button" onClick={() => rotate(1)} aria-label="Rotate camera right" title="Rotate (R)">↻</button>
+            <button type="button" className="valley-wide" onClick={() => rotate(-1)} aria-label="Rotate camera left" title="Rotate (←)">↺</button>
+            <button type="button" onClick={() => rotate(1)} aria-label="Rotate camera right" title="Rotate (→)">↻</button>
             {!recording && <>
               <button type="button" onClick={() => openMenu({ kind: "bag" })}>Bag</button>
               {hud.map === "farm" && <button type="button" className="valley-wide" onClick={() => openMenu({ kind: "decor" })}>Decorate</button>}
@@ -782,7 +786,8 @@ export default function RareFriendsValley({ friendId, client, paused }: GameComp
       <ul className="valley-steps">
         <li><strong>Tap / click</strong> a tile: walk there and use your tool. <strong>Hands</strong> does what the tile needs (clear, till, plant, water, harvest).</li>
         <li><strong>Tap a villager</strong> to talk and give gifts. <strong>Tap a door</strong> to shop, the <strong>bin</strong> to ship, your <strong>house</strong> to sleep.</li>
-        <li><strong>WASD / arrows</strong>: walk · <strong>E / Space</strong>: act in front · <strong>1–5</strong>: tools (Seeds again cycles packets) · <strong>Q / R</strong>: rotate the camera · <strong>B</strong>: bag · <strong>C</strong>: record a clip.</li>
+        <li><strong>WASD</strong>: walk · <strong>E / Space</strong>: act in front · <strong>1–5</strong>: tools (Seeds again cycles packets) · <strong>B</strong>: bag · <strong>C</strong>: record a clip.</li>
+        <li><strong>← / →</strong> (or Q / R): rotate the camera · <strong>↑ / ↓</strong> (or the mouse wheel): zoom in and out.</li>
         <li>Refill the watering can at the <strong>well</strong> or the <strong>pond</strong>. The road east leads to town.</li>
       </ul>
       <p>A day runs 6 am to 2 am (about five minutes). Energy drops as you work; eat or sleep to recover. The valley pauses while a menu is open.</p>

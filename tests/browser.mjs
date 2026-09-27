@@ -34,8 +34,8 @@ await testGame(game, {
     await page.keyboard.press("1");
     await shot(page, "desktop-farming");
 
-    // The camera rotates in quarter turns (Q / R and the buttons).
-    await page.keyboard.press("r"); await page.waitForTimeout(700);
+    // The arrow keys rotate the camera in quarter turns (← / →), as do Q / R and the buttons.
+    await page.keyboard.press("ArrowRight"); await page.waitForTimeout(700);
     assert.equal(await number(frame, "angle"), 1);
     await shot(page, "desktop-rotated");
     await frame.getByRole("button", { name: "Rotate camera left" }).click(); await page.waitForTimeout(500);
@@ -111,9 +111,9 @@ await testGame(game, {
     await frame.getByRole("heading", { name: "Decorate your farm" }).waitFor();
     await frame.locator(".valley-collection button", { hasText: "Place" }).first().click();
     await canvas.focus();
-    await page.keyboard.press("ArrowDown"); await page.keyboard.press("ArrowDown"); await page.keyboard.press("Enter");
+    await face(page, "s"); await face(page, "s"); await page.keyboard.press("Enter");
     await page.waitForTimeout(150);
-    if (await number(frame, "decor") === 0) { await page.keyboard.press("ArrowLeft"); await page.keyboard.press("Enter"); }
+    if (await number(frame, "decor") === 0) { await face(page, "a"); await page.keyboard.press("Enter"); }
     assert.ok(await number(frame, "decor") >= 1, "décor placed");
     await frame.getByRole("button", { name: "Done" }).click().catch(() => {});
     await canvas.focus();
