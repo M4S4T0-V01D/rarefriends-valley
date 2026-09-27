@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RareFriends Valley</title>
+<meta name="description" content="Your Rare Friend tends a little farm through the seasons in a greyscale valley where every villager is a Rare Friend. A FriendSDK game for the Rare Friends Vibeathon.">
+<meta property="og:title" content="RareFriends Valley">
+<meta property="og:description" content="Plant, water and harvest through four seasons with your Rare Friend. Befriend a town of Rare Friends, and film little clips of your farm with music.">
+<meta property="og:image" content="https://m4s4t0-v01d.github.io/rarefriends-valley/preview/img/diary-card.png">
+<meta property="og:url" content="https://m4s4t0-v01d.github.io/rarefriends-valley/preview/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RareFriends Valley">
+<meta name="twitter:description" content="A greyscale 2.5D farming life sim starring the Rare Friends you own. @RareFriendsNFT #RareFriends #RareFriendsValley">
+<meta name="twitter:image" content="https://m4s4t0-v01d.github.io/rarefriends-valley/preview/img/diary-card.png">
+<meta name="theme-color" content="#efede7">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23efede7'/%3E%3Cpath d='M8 14V7M8 9C8 6 5 5 3 5c0 3 2 4 5 4zM8 8c0-3 3-4 5-4 0 3-2 4-5 4z' fill='%23b4c3ab' stroke='%23161616' stroke-width='1.2'/%3E%3C/svg%3E">
+<style>
+:root {
+  color-scheme: light;
+  --ink: #161616; --paper: #efede7; --card: #f7f5f0; --muted: #6d6b67; --line: #cfccc4;
+  --rose: #d8b6b4; --sage: #b4c3ab; --butter: #e2d7ad; --blue: #afbccb; --lavender: #c6bed4;
+  --mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.6 var(--mono); overflow-x: hidden;
+  background-image: radial-gradient(rgba(22,22,22,.06) 1px, transparent 1.2px); background-size: 12px 12px; }
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: .07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 49; background: radial-gradient(ellipse at center, transparent 55%, rgba(22,22,22,.18)); }
+a { color: inherit; }
+img { max-width: 100%; height: auto; display: block; }
+.wrap { width: min(1120px, 100% - 32px); margin: 0 auto; }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border: 2px solid var(--ink); background: var(--card); color: var(--ink);
+  font: 700 15px var(--mono); text-decoration: none; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s, box-shadow .12s; }
+.btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+.btn.primary { background: var(--ink); color: var(--paper); font-size: 17px; padding: 16px 28px; }
+.tag { display: inline-block; padding: 3px 10px; border: 1.5px solid var(--ink); background: var(--butter); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+
+/* Top bar */
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
+.logo i { width: 34px; height: 34px; border: 2px solid var(--ink); background: var(--sage); display: grid; place-items: center; font-style: normal; box-shadow: 2px 2px 0 var(--ink); }
+.bar nav { display: flex; gap: 18px; font-size: 13px; }
+.bar nav a { text-decoration: none; border-bottom: 1.5px solid transparent; }
+.bar nav a:hover { border-color: var(--ink); }
+
+/* Hero */
+.hero { display: grid; grid-template-columns: 1fr 1.15fr; gap: 48px; align-items: center; padding: 28px 0 40px; }
+.hero h1 { font-size: clamp(40px, 6.4vw, 76px); line-height: .98; margin: 18px 0 18px; letter-spacing: -.02em; }
+.hero h1 span { display: inline-block; background: linear-gradient(transparent 62%, var(--sage) 62%); }
+.hero p.lead { font-size: 17px; max-width: 520px; margin: 0 0 26px; }
+.hero .cta { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.hero small { display: block; margin-top: 18px; color: var(--muted); font-size: 12px; max-width: 480px; }
+.photo { position: relative; background: #fff; border: 2px solid var(--ink); padding: 12px 12px 44px; box-shadow: 8px 8px 0 var(--ink); transform: rotate(1.2deg); }
+.photo img { border: 1.5px solid var(--ink); }
+.photo figcaption { position: absolute; left: 14px; bottom: 12px; font-weight: 700; font-size: 13px; letter-spacing: .06em; }
+.photo::before, .photo::after { content: ""; position: absolute; width: 90px; height: 26px; background: rgba(226,215,173,.85); border: 1px solid rgba(22,22,22,.25); top: -13px; }
+.photo::before { left: 24px; transform: rotate(-6deg); } .photo::after { right: 24px; transform: rotate(5deg); background: rgba(216,182,180,.85); }
+
+/* Street parade */
+.street { position: relative; height: 96px; border-block: 2px solid var(--ink); background: #d6d3cc; overflow: hidden; }
+.street::after { content: ""; position: absolute; left: 0; right: 0; bottom: 18px; border-top: 2px dashed rgba(247,245,240,.9); }
+.street canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
+.street span { position: absolute; right: 16px; top: 10px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; background: var(--card); border: 1.5px solid var(--ink); padding: 2px 8px; z-index: 2; }
+
+/* Sections */
+section { padding: 64px 0; }
+h2 { font-size: clamp(26px, 3.6vw, 38px); margin: 10px 0 12px; letter-spacing: -.01em; }
+.sub { color: var(--muted); max-width: 640px; margin: 0 0 30px; }
+.features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.feature { background: var(--card); border: 2px solid var(--ink); padding: 20px; box-shadow: 4px 4px 0 var(--ink); position: relative; }
+.feature::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 7px; background: var(--accent, var(--rose)); border-right: 2px solid var(--ink); }
+.feature h3 { margin: 0 0 8px 8px; font-size: 16px; }
+.feature p { margin: 0 0 0 8px; font-size: 13.5px; color: #3a3936; }
+.feature b.icon { display: inline-grid; place-items: center; width: 30px; height: 30px; margin: 0 0 10px 8px; border: 1.5px solid var(--ink); background: #fff; font-size: 15px; }
+
+.gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+.shot { margin: 0; background: #fff; border: 2px solid var(--ink); padding: 8px 8px 12px; box-shadow: 4px 4px 0 var(--ink); transition: transform .2s; }
+.shot:nth-child(3n+1) { transform: rotate(-.6deg); } .shot:nth-child(3n+2) { transform: rotate(.5deg); } .shot:nth-child(3n) { transform: rotate(-.3deg); }
+.shot:hover { transform: rotate(0) translateY(-3px); }
+.shot a { display: block; border: 1.5px solid var(--ink); }
+.shot figcaption { font-size: 12.5px; margin-top: 9px; }
+.shot figcaption b { display: block; font-size: 13.5px; }
+
+.day { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center; }
+.steps { counter-reset: step; list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 38px 1fr; gap: 12px; align-items: start; font-size: 14px; }
+.steps li::before { content: counter(step); display: grid; place-items: center; width: 38px; height: 38px; border: 2px solid var(--ink); background: var(--butter); font-weight: 800; box-shadow: 2px 2px 0 var(--ink); }
+
+.capsules { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.capsule { background: var(--card); border: 2px solid var(--ink); padding: 18px 16px; text-align: center; box-shadow: 4px 4px 0 var(--ink); }
+.capsule i { display: block; width: 58px; height: 58px; margin: 0 auto 12px; border-radius: 50%; border: 2px solid var(--ink); background: linear-gradient(180deg, #fff 50%, var(--c) 50%); box-shadow: 3px 3px 0 var(--ink); position: relative; }
+.capsule i::after { content: ""; position: absolute; left: -2px; right: -2px; top: calc(50% - 1px); height: 2px; background: var(--ink); }
+.capsule h3 { margin: 0 0 4px; font-size: 15px; } .capsule p { margin: 0; font-size: 12.5px; color: var(--muted); }
+.capsule strong { display: block; margin: 8px 0 6px; font-size: 20px; }
+
+.seasons { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.seasons figure { margin: 0; background: #fff; border: 2px solid var(--ink); padding: 6px 6px 10px; box-shadow: 3px 3px 0 var(--ink); }
+.seasons img { border: 1.5px solid var(--ink); aspect-ratio: 3 / 2; object-fit: cover; }
+.seasons figcaption { font-weight: 800; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; margin-top: 7px; }
+.films { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: center; }
+.films .photo img { image-rendering: auto; }
+.play { text-align: center; background: var(--ink); color: var(--paper); border-block: 2px solid var(--ink); }
+.play h2 { color: var(--paper); }
+.play .btn { background: var(--paper); color: var(--ink); box-shadow: 5px 5px 0 var(--rose); font-size: 18px; padding: 18px 34px; }
+.play .btn:hover { box-shadow: 6px 6px 0 var(--rose); }
+.play p { color: #cfccc4; max-width: 640px; margin: 0 auto 28px; }
+.play small { display: block; margin-top: 22px; color: #a9a6a0; font-size: 12px; }
+.links { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 26px; }
+.links a { color: var(--paper); font-size: 13px; border-bottom: 1.5px solid #6d6b67; text-decoration: none; }
+.links a:hover { border-color: var(--paper); }
+
+footer { padding: 34px 0 96px; font-size: 12.5px; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; }
+.tags { font-weight: 700; color: var(--ink); }
+
+/* Floating record player: the game's Street Bossa, on a click. */
+.music { position: fixed; right: 16px; bottom: 16px; z-index: 48; display: inline-flex; align-items: center; gap: 10px;
+  padding: 8px 16px 8px 8px; border: 2px solid var(--ink); border-radius: 999px; background: var(--card); color: var(--ink);
+  font: 700 13px/1 var(--mono); cursor: pointer; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s, box-shadow .12s; }
+.music:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.music:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.music:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+.music.on { background: var(--butter); }
+.music.next { right: auto; left: 16px; padding: 8px 14px; }
+.music[hidden] { display: none; }
+.record { width: 34px; height: 34px; border-radius: 50%; flex: none; position: relative;
+  background: repeating-radial-gradient(circle, #161616 0 2px, #2b2b2b 2px 3px); animation: spin 2.4s linear infinite paused; }
+.record::after { content: "♪"; position: absolute; inset: 10px; border-radius: 50%; background: var(--rose); color: var(--ink);
+  font-size: 10px; line-height: 14px; text-align: center; }
+.music.on .record { animation-play-state: running; }
+.eq { display: none; align-items: flex-end; gap: 2px; height: 12px; }
+.eq i { width: 3px; background: var(--ink); animation: eq .9s ease-in-out infinite alternate; }
+.eq i:nth-child(2) { animation-delay: -.3s; } .eq i:nth-child(3) { animation-delay: -.6s; }
+.music.on .eq { display: inline-flex; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes eq { from { height: 3px; } to { height: 12px; } }
+@media (prefers-reduced-motion: reduce) { .record, .eq i { animation: none; } .eq i { height: 8px; } .music { transition: none; } }
+
+@media (max-width: 900px) {
+  .hero, .day { grid-template-columns: 1fr; gap: 34px; }
+  .features, .gallery, .seasons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .films { grid-template-columns: 1fr; gap: 28px; }
+  .capsules { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bar nav { display: none; }
+}
+@media (max-width: 560px) {
+  body { font-size: 14px; }
+  .features, .gallery, .capsules { grid-template-columns: 1fr; }
+  .seasons { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .photo { transform: none; box-shadow: 5px 5px 0 var(--ink); }
+  section { padding: 44px 0; }
+  .btn.primary { width: 100%; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .shot, .btn { transition: none; } }
+</style>
+</head>
+<body>
+<header class="wrap bar">
+  <a class="logo" href="#top"><i>✿</i> RareFriends Valley</a>
+  <nav aria-label="Sections"><a href="#features">Features</a><a href="#seasons">Seasons</a><a href="#films">Friend Films</a><a href="#blessings">Blessings</a><a href="#play">Play</a></nav>
+  <a class="btn" href="../">▶ Play</a>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div>
+      <span class="tag">Rare Friends Vibeathon · FriendSDK v0.1.2</span>
+      <h1>Your Friend grows a <span>farm.</span></h1>
+      <p class="lead">A greyscale, faded-colour farming life sim in a 2.5D valley you can spin around. Your Rare Friend clears the field, plants, waters and harvests through four seasons, and everyone in town is a Rare Friend too, including the ones in your wallet.</p>
+      <div class="cta">
+        <a class="btn primary" href="../">▶ Play RareFriends Valley</a>
+        <a class="btn" href="https://github.com/M4S4T0-V01D/rarefriends-valley">Source on GitHub</a>
+      </div>
+      <small>Plays in the browser. You need a wallet on Robinhood mainnet holding a hardwired Rare Friends Generations NFT. Every RF purchase in the game is simulated; nothing is signed or spent.</small>
+    </div>
+    <figure class="photo">
+      <img src="img/farm-summer.png" width="960" height="640" alt="A greyscale isometric farm in summer: rows of tomatoes, corn and melons, a star windmill, a scarecrow and a golden statue of the player's Friend">
+      <figcaption>SUMMER 4 · YEAR 1</figcaption>
+    </figure>
+  </div>
+
+  <div class="street" aria-hidden="true"><span>Villagers walking by</span><canvas id="parade"></canvas></div>
+
+  <section id="features">
+    <div class="wrap">
+      <span class="tag" style="background:var(--sage)">What's inside</span>
+      <h2>A whole valley, made of Friends.</h2>
+      <p class="sub">A harvest-season life sim built around the Friends in your wallet: their on-chain sprites and families.</p>
+      <div class="features">
+        <article class="feature" style="--accent:var(--sage)"><b class="icon">✿</b><h3>Grow through the seasons</h3><p>Clear weeds and rocks, till, plant, water every day. Ten crops across spring, summer, autumn and winter; some regrow, and out-of-season crops wither when the season turns.</p></article>
+        <article class="feature" style="--accent:var(--butter)"><b class="icon">☀</b><h3>Days, nights and weather</h3><p>The clock runs 6 am to 2 am. Lamps and windows glow at night, rain and snow water the crops for you, and petals, leaves and snowflakes drift by.</p></article>
+        <article class="feature" style="--accent:var(--rose)"><b class="icon">♥</b><h3>Energy and rest</h3><p>Every tool costs energy. Get tired and your Friend slows down; stay up past 2 am and you pass out. Eat crops or café food, or go to bed.</p></article>
+        <article class="feature" style="--accent:var(--blue)"><b class="icon">⌂</b><h3>A town of Rare Friends</h3><p>Eight villagers with schedules, favourite gifts and hearts, plus your own owned Friends, who move in and help water once they like you.</p></article>
+        <article class="feature" style="--accent:var(--lavender)"><b class="icon">↻</b><h3>Spin the camera</h3><p>Rotate the 2.5D valley in quarter turns (Q and R, or the buttons). Clips can slowly orbit the farm on their own.</p></article>
+        <article class="feature" style="--accent:var(--sage)"><b class="icon">●</b><h3>Friend Films</h3><p>Record a little clip of your farm and save it as a GIF, or as a video with the game's music, then post it to X. Each day also draws a diary card.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="seasons" style="padding-top:20px">
+    <div class="wrap">
+      <span class="tag" style="background:var(--blue)">Four seasons</span>
+      <h2>The same farm, all year.</h2>
+      <p class="sub">Captured from the game on the custom host, using saved farms. Each season has its own crops, colours, weather and tune.</p>
+      <div class="seasons">
+        <figure><a href="img/farm-rotated.png"><img src="img/farm-rotated.png" width="960" height="640" loading="lazy" alt="Spring: blossoms, turnips and strawberries, with the camera rotated"></a><figcaption>Spring · camera rotated</figcaption></figure>
+        <figure><a href="img/farm-summer.png"><img src="img/farm-summer.png" width="960" height="640" loading="lazy" alt="Summer: tomatoes, corn and melons"></a><figcaption>Summer</figcaption></figure>
+        <figure><a href="img/farm-autumn.png"><img src="img/farm-autumn.png" width="960" height="640" loading="lazy" alt="Autumn: pumpkins, eggplants and orange trees"></a><figcaption>Autumn</figcaption></figure>
+        <figure><a href="img/farm-winter.png"><img src="img/farm-winter.png" width="960" height="640" loading="lazy" alt="Winter: snow, bare trees and Snow Cabbage"></a><figcaption>Winter · snow</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery" style="padding-top:20px">
+    <div class="wrap">
+      <span class="tag" style="background:var(--butter)">Screenshots</span>
+      <h2>A look around the valley.</h2>
+      <p class="sub">Captured from the game with the SDK's mock wallet. Tap any picture to see it full size.</p>
+      <div class="gallery">
+        <figure class="shot"><a href="img/farm-night.png"><img src="img/farm-night.png" width="960" height="640" loading="lazy" alt="The farm at night with glowing windows, lamps and a moon lantern"></a><figcaption><b>Night on the farm</b>Windows, lamps and the Moon Lantern glow after dark.</figcaption></figure>
+        <figure class="shot"><a href="img/town.png"><img src="img/town.png" width="960" height="640" loading="lazy" alt="The town plaza with the fountain, café, store and Rare Friend villagers"></a><figcaption><b>Town</b>Every villager is a Rare Friend, on their own schedule.</figcaption></figure>
+        <figure class="shot"><a href="img/store.png"><img src="img/store.png" width="960" height="640" loading="lazy" alt="The General Store with seasonal seeds"></a><figcaption><b>General Store</b>Seasonal seeds, fertilizer, tool upgrades and décor.</figcaption></figure>
+        <figure class="shot"><a href="img/blessing.png"><img src="img/blessing.png" width="960" height="640" loading="lazy" alt="A Moonlight Blessing opened"></a><figcaption><b>Moonlight Blessings</b>Simulated RF: keep a blessing or redeem it.</figcaption></figure>
+        <figure class="shot"><a href="img/collection.png"><img src="img/collection.png" width="960" height="640" loading="lazy" alt="RF décor collection"></a><figcaption><b>RF décor that boosts crops</b>Eight pieces, up to a golden statue of your Friend.</figcaption></figure>
+        <figure class="shot"><a href="img/diary.png"><img src="img/diary.png" width="960" height="640" loading="lazy" alt="The diary after sleeping"></a><figcaption><b>Sleep and ship</b>The bin pays out overnight; the diary sums up your day.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="films" style="padding-top:20px">
+    <div class="wrap films">
+      <figure class="photo" style="transform:rotate(-.8deg)">
+        <img src="img/clip.gif" width="420" height="280" loading="lazy" alt="An animated clip recorded in the game: the camera slowly orbits a summer farm with a spinning windmill">
+        <figcaption>RECORDED IN-GAME · GIF</figcaption>
+      </figure>
+      <div>
+        <span class="tag" style="background:var(--rose)">Friend Films</span>
+        <h2>Film your farm.</h2>
+        <ol class="steps">
+          <li><span><b>Press ● Clip.</b> Six seconds of your farm, with an optional slow camera orbit and a little label.</span></li>
+          <li><span><b>Get a GIF</b> from the game's own encoder, and a <b>video with the music</b> where the browser can record it.</span></li>
+          <li><span><b>Post it to X</b> with the share sheet on phones, or save it and open a prefilled post on desktop.</span></li>
+          <li><span><b>Every night</b> also draws a diary card of your day, ready to post: @RareFriendsNFT #RareFriends #RareFriendsValley.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="blessings" style="padding-top:20px">
+    <div class="wrap">
+      <span class="tag" style="background:var(--lavender)">$RAREFRIENDS</span>
+      <h2>Moonlight Blessings.</h2>
+      <p class="sub">One blessing costs 1 RF (simulated) and returns 0.88 RF in expected value. Keep it for daily fertilizer, morning dew, better prices or golden crops, or redeem it for its RF value. Every blessing also grants RF décor that boosts the crops around it.</p>
+      <div class="capsules">
+        <div class="capsule" style="--c:#b4c3ab"><i></i><h3>Sprout Charm</h3><strong>60%</strong><p>0.5 RF · daily Sprout Fertilizer<br>Lucky Scarecrow, Wind Chime, Flower Arch</p></div>
+        <div class="capsule" style="--c:#b9bfc6"><i></i><h3>Silver Dew</h3><strong>28%</strong><p>1 RF · waters crops each morning<br>Crystal Sprinkler, Silver Beehive</p></div>
+        <div class="capsule" style="--c:#c6bed4"><i></i><h3>Moon Bloom</h3><strong>10%</strong><p>2 RF · crops sell +10%<br>Moon Lantern, Star Windmill</p></div>
+        <div class="capsule" style="--c:#e2d49e"><i></i><h3>Golden Harvest</h3><strong>2%</strong><p>5 RF · golden crops ×3 price<br>Golden Friend Statue</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="play" class="play">
+    <div class="wrap">
+      <h2>Start your farm.</h2>
+      <p>Connect a wallet, pick your Friend, and step onto the field. It works on desktop and in a phone wallet's browser; landscape is best.</p>
+      <a class="btn" href="../">▶ Play RareFriends Valley</a>
+      <small>Requires a browser wallet on Robinhood mainnet (chain 4663) holding a hardwired Rare Friends Generations NFT (generation 1 or higher). RF purchases and rewards are simulated.</small>
+      <div class="links">
+        <a href="https://github.com/M4S4T0-V01D/rarefriends-valley">Source code</a>
+        <a href="https://github.com/M4S4T0-V01D/rarefriends-valley/blob/main/games/rarefriends-valley/README.md">Full rules</a>
+        <a href="https://m4s4t0-v01d.github.io/rarefriends-cafe/preview/">RareFriends Cafe</a>
+        <a href="https://github.com/spokesz/rarefriends-vibeathon">Rare Friends Vibeathon</a>
+        <a href="https://github.com/spokesz/friendsdk">FriendSDK</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Built by <b>M4S4T0</b> (<a href="https://github.com/M4S4T0-V01D">@M4S4T0-V01D</a>) with FriendSDK v0.1.2. Rare Friends artwork is used under the FriendSDK NOTICE.</span>
+    <span class="tags">@RareFriendsNFT #RareFriends #RareFriendsValley</span>
+  </div>
+</footer>
+
+<button id="music" class="music" type="button" aria-pressed="false" title="The game's own procedural music">
+  <span class="record" aria-hidden="true"></span><span class="music-label">Play the valley music</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+</button>
+<button id="next-track" class="music next" type="button" aria-label="Next track" title="Next track" hidden>⏭</button>
+
+<script src="music.js" defer></script>
+<script>
+// A parade of Rare Friends (canonical sample sprites and the game's villager Friends) strolling along the road.
+(() => {
+  const SPRITES = [["................|................|...........####.|...........####.|...........##.#.|...........####.|...###########..|...###########..|...###########..|...###########..|....#.......#...|....#.......#...|................|................|.....######.....|................","................|................|...........####.|...........####.|...........##.#.|...........####.|...###########..|...###########..|...###########..|...###########..|....#.......#...|....#.......#...|................|................|.....######.....|................","................|................|................|...........####.|...........####.|...........##.#.|...........####.|...###########..|...###########..|...###########..|...###########..|....#.......#...|....#.......#...|................|....########....|................","................|................|...........####.|...........####.|...........##.#.|...........####.|...###########..|...###########..|...###########..|...###########..|....#.......#...|....#.......#...|................|................|....########....|................"],["................|......##........|......####......|.....#######....|....######.#....|....######.#....|....########....|.......##.......|.......##.......|......####......|.....######.....|.....######.....|.....######.....|.......##.......|.......##.......|................","................|......##........|......####......|.....#######....|....######.#....|....######.#....|....########....|.......##.......|.......##.......|......####......|.....######.....|.....######.....|.....######.....|.....##.##......|.....##.##......|................","................|......##........|......####......|.....#######....|....######.#....|....######.#....|....########....|.......##.......|.......##.......|......####......|.....######.....|.....######.....|.....######.....|.......##.......|.......##.......|................","................|......##........|......####......|.....#######....|....######.#....|....######.#....|....########....|.......##.......|.......##.......|......####......|.....######.....|.....######.....|.....######.....|.....##.##......|........##......|................"],["................|......####......|....########....|....########....|....##.##.##....|....#..##..#....|....########....|....########....|.......#.#......|.......##.......|.....######.....|.......##.......|.....######.....|.......##.......|......#..#......|......#..#......","................|......####......|....########....|....########....|....##.##.##....|....#..##..#....|....########....|....########....|.......#.#......|.......##.......|.....######.....|.......##.......|.....######.....|.......##.......|......#..#......|.....#....#....."],["................|................|................|......####......|...##########...|...##########...|..####.##.####..|..###.####.###..|..##.######.##..|..####.##.####..|..############..|...#.######.#...|....########....|......####......|.....#....#.....|.....#....#.....","................|................|................|......####......|...##########...|...##########...|..####.##.####..|..###.####.###..|..##.######.##..|..####.##.####..|..############..|...#.######.#...|....########....|......####......|.....#....#.....|....#......#...."],["................|................|.....######.....|....########....|...##########...|.#.###.##.###.#.|..############..|...##########...|....########....|.....######.....|................|................|.......##.......|................|........#.......|................","................|................|.....######.....|....########....|...##########...|.#.###.##.###.#.|..############..|...##########...|....########....|.....######.....|................|................|.......##.......|................|.......#........|................"],["................|................|.............#..|............###.|.............#..|......####......|.....######.....|.#..########....|###.##.##.##....|.#..########....|....########....|.....######.....|...#..####......|..###.#..#......|...#..#..#......|................","................|................|.............#..|............###.|.............#..|......####......|.....######.....|.#..########....|###.##.##.##....|.#..########....|....########....|.....######.....|...#..####......|..###.#..#......|...#.#....#.....|................"],["................|................|......####......|....########....|...##.####.##...|...###....###...|...##......##...|..###......###..|...##......##...|...###....###...|...##########...|....########....|......####......|.....#....#.....|.....#....#.....|................","................|................|......####......|....########....|...##.####.##...|...###....###...|...##......##...|..###......###..|...##......##...|...###....###...|...##########...|....########....|......####......|.....#....#.....|....#......#....|................"],["................|................|................|...######.......|...######.......|..########......|..##.##.##......|..########.##...|..############..|...############.|...########.#.#.|..........####..|....#..#...##...|....#..#...#.#..|...#...#........|................","................|................|................|...######.......|...######.......|..########......|..##.##.##......|..########.##...|..############..|...############.|...########.#.#.|..........####..|....#..#...##...|....#..#...#.#..|....#...#.......|................"],["................|................|.....######.....|....########....|...##########...|.#.###.##.###.#.|..############..|...##########...|....########....|.....######.....|................|................|.......##.......|................|........#.......|................","................|................|.....######.....|....########....|...##########...|.#.###.##.###.#.|..############..|...##########...|....########....|.....######.....|................|................|.......##.......|................|.......#........|................"]].map(frames => frames.map(frame => frame.split("|")));
+  const canvas = document.getElementById("parade"), ctx = canvas.getContext("2d");
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const cache = new Map();
+  function art(rows, scale) {
+    const id = scale + rows.join("");
+    if (cache.has(id)) return cache.get(id);
+    const c = document.createElement("canvas"); c.width = c.height = 18 * scale;
+    const g = c.getContext("2d");
+    g.fillStyle = "#fff"; rows.forEach((row, y) => [...row].forEach((p, x) => { if (p === "#") g.fillRect(x * scale, y * scale, scale * 3, scale * 3); }));
+    g.fillStyle = "#161616"; rows.forEach((row, y) => [...row].forEach((p, x) => { if (p === "#") g.fillRect((x + 1) * scale, (y + 1) * scale, scale, scale); }));
+    cache.set(id, c); return c;
+  }
+  let walkers = [], width = 0, height = 0, last = 0;
+  function resize() {
+    const ratio = Math.min(devicePixelRatio || 1, 2);
+    width = canvas.clientWidth; height = canvas.clientHeight;
+    canvas.width = width * ratio; canvas.height = height * ratio; ctx.setTransform(ratio, 0, 0, ratio, 0, 0); ctx.imageSmoothingEnabled = false;
+    const count = Math.max(4, Math.round(width / 150));
+    walkers = Array.from({ length: count }, (_, i) => ({ sprite: i % SPRITES.length, x: (i + Math.random() * .6) * width / count, speed: 28 + Math.random() * 22, phase: Math.random() * 10 }));
+  }
+  function frame(now) {
+    const dt = last ? Math.min(.05, (now - last) / 1000) : 0; last = now;
+    ctx.clearRect(0, 0, width, height);
+    for (const w of walkers) {
+      if (!still) { w.x += w.speed * dt; if (w.x > width + 60) { w.x = -60; w.sprite = Math.floor(Math.random() * SPRITES.length); } }
+      const frames = SPRITES[w.sprite], f = still ? 0 : Math.floor(now / 160 + w.phase) % frames.length;
+      const image = art(frames[f], 3);
+      ctx.fillStyle = "rgba(22,22,22,.16)"; ctx.beginPath(); ctx.ellipse(w.x + 27, height - 22, 16, 5, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.drawImage(image, Math.round(w.x), height - 22 - image.height + 6);
+    }
+    if (!still) requestAnimationFrame(frame);
+  }
+  addEventListener("resize", () => { resize(); if (still) frame(0); });
+  resize(); requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

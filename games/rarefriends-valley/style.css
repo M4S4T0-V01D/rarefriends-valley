@@ -1,0 +1,162 @@
+/* RareFriends Valley — black, white and greys with faded sage, rose, butter, lavender and dusty-blue accents. */
+.valley-game { --ink: #161616; --paper: #efede7; --card: #f7f5f0ee; --muted: #6d6b67; --rose: #d8b6b4; --sage: #b4c3ab; --butter: #e2d7ad; --blue: #afbccb; --lavender: #c6bed4;
+  position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--paper); color: var(--ink); font: 13px/1.4 ui-monospace, "SFMono-Regular", Menlo, monospace; }
+.valley-game * { box-sizing: border-box; }
+.valley-world { position: absolute; inset: 0; }
+.valley-world canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: pointer; outline-offset: -3px; }
+.valley-world canvas:focus-visible { outline: 3px solid var(--ink); }
+.valley-game button { font: inherit; min-height: 34px; padding: 7px 12px; border: 1.5px solid var(--ink); background: var(--paper); color: var(--ink); cursor: pointer; box-shadow: 2px 2px 0 var(--ink); }
+.valley-game button:hover:not(:disabled) { background: #fff; }
+.valley-game button:active:not(:disabled) { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+.valley-game button:disabled { opacity: .45; cursor: default; box-shadow: none; }
+.valley-game button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.valley-game .rf-frame-primary { background: var(--ink); color: var(--paper); }
+.valley-game .rf-frame-primary:hover:not(:disabled) { background: #333; }
+.valley-game button[aria-pressed="true"]:hover:not(:disabled), .valley-game button[aria-checked="true"]:hover:not(:disabled), .valley-game button[aria-selected="true"]:hover:not(:disabled) { background: #333; color: var(--paper); }
+
+/* HUD */
+.valley-hud { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; align-items: flex-start; gap: 10px; pointer-events: none; }
+.valley-card { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; row-gap: 3px; min-width: 214px; padding: 9px 12px; background: var(--card); border: 1.5px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); margin-right: auto; }
+.valley-card > :not(.valley-portrait) { grid-column: 2; }
+.valley-portrait { grid-column: 1; grid-row: 1 / span 5; align-self: center; width: 54px; height: 54px; image-rendering: pixelated; background: var(--sage); border: 1.5px solid var(--ink); }
+.valley-title { font-size: 14px; letter-spacing: .03em; text-transform: uppercase; }
+.valley-day { font-size: 11px; color: var(--muted); }
+.valley-clock, .valley-energy { display: block; height: 5px; background: #d9d6cf; }
+.valley-clock i, .valley-energy i { display: block; height: 100%; background: var(--ink); transition: width .2s linear; }
+.valley-energy i { background: #8fa884; }
+.valley-energy.low i { background: #c27d78; }
+.valley-stats { display: flex; gap: 12px; font-size: 13px; white-space: nowrap; }
+.valley-actions { display: flex; gap: 6px; pointer-events: auto; flex-wrap: wrap; justify-content: flex-end; max-width: 60%; }
+.valley-actions button { background: var(--card); }
+.valley-rec { font-weight: 700; }
+.valley-rec.on { background: #c27d78 !important; color: #fff; animation: valley-blink 1s steps(2) infinite; }
+@keyframes valley-blink { 50% { box-shadow: 2px 2px 0 var(--ink), 0 0 0 4px #c27d7855; } }
+
+.valley-footer { position: absolute; left: 50%; bottom: 56px; transform: translateX(-50%); width: min(640px, calc(100% - 20px)); display: grid; justify-items: center; gap: 8px; pointer-events: none; }
+.valley-footer p { margin: 0; padding: 5px 12px; background: var(--card); border: 1.5px solid var(--ink); font-size: 12px; text-align: center; max-width: 100%; }
+.valley-footer button { pointer-events: auto; }
+.valley-placing { grid-template-columns: 1fr auto; align-items: center; }
+.valley-hotbar { display: flex; gap: 6px; pointer-events: auto; padding: 5px; background: var(--card); border: 1.5px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+.valley-hotbar button { position: relative; display: grid; justify-items: center; gap: 1px; min-width: 62px; padding: 4px 6px 3px; box-shadow: none; }
+.valley-hotbar button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.valley-hotbar button[aria-pressed="true"] .valley-icon { background: var(--paper); border-radius: 3px; }
+.valley-tool-label { font-size: 10px; }
+.valley-key { position: absolute; left: 3px; top: 1px; font-size: 9px; opacity: .6; }
+.valley-count { position: absolute; right: 3px; top: 1px; font-size: 10px; }
+.valley-icon { image-rendering: auto; }
+
+.valley-status { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; text-align: center; background: var(--paper); }
+.valley-status p { margin: 0; max-width: 420px; }
+.valley-sprout { font-size: 44px; filter: grayscale(.6); animation: valley-float 1.6s ease-in-out infinite; }
+@keyframes valley-float { 50% { transform: translateY(-6px); } }
+
+/* SDK menus, dressed for the valley. */
+.valley-game .rf-frame-scrim { background: #16161655; padding-bottom: 58px; }
+.valley-game .rf-frame-menu { background: var(--paper); border: 1.5px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); max-width: 580px; }
+.valley-game .rf-frame-menu-heading { border-bottom: 1.5px solid var(--ink); background: #fff; }
+.valley-game .rf-frame-menu-heading h2 { font-size: 15px; letter-spacing: .03em; }
+.valley-game .rf-frame-menu-heading button { box-shadow: none; border: 0; background: transparent; min-height: 30px; }
+.valley-game .rf-frame-menu-body > button { margin: 4px 8px 4px 0; }
+.valley-perk { padding: 8px 10px; background: #fff; border-left: 4px solid var(--sage); }
+.valley-steps { margin: 0 0 14px; padding-left: 20px; display: grid; gap: 6px; }
+.valley-note { font-size: 11px; color: var(--muted); }
+.valley-sim { padding: 6px 10px; background: var(--butter); border: 1px dashed var(--ink); font-size: 12px; }
+.valley-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+.valley-tabs button { flex: 1; box-shadow: none; }
+.valley-tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); }
+.valley-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #cfccc4; }
+.valley-row > span { margin-right: auto; min-width: 0; }
+.valley-row small { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; }
+.valley-row em { font-style: normal; font-size: 11px; padding: 3px 8px; background: var(--sage); border: 1px solid var(--ink); white-space: nowrap; }
+.valley-row button { white-space: nowrap; }
+.valley-odds { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 11px; text-align: left; }
+.valley-odds th, .valley-odds td { padding: 5px 4px; border-bottom: 1px solid #cfccc4; vertical-align: top; }
+.valley-odds th { border-bottom: 1.5px solid var(--ink); }
+.valley-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 12px; }
+.valley-check { display: flex; gap: 8px; align-items: center; margin: 10px 0; }
+.valley-range { display: flex; gap: 8px; align-items: center; }
+.valley-summary { display: grid; gap: 2px; margin-bottom: 12px; }
+.valley-summary p { display: flex; justify-content: space-between; gap: 12px; margin: 0; padding: 5px 0; border-bottom: 1px dashed #bdb9b0; }
+.valley-summary strong { text-align: right; }
+.valley-chip { flex: none; image-rendering: pixelated; background: #fff; border: 1px solid var(--ink); }
+
+/* Bag */
+.valley-bag { display: grid; grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 6px; margin: 6px 0 10px; }
+.valley-bag button { position: relative; display: grid; place-items: center; min-height: 46px; padding: 2px; box-shadow: none; background: #fff; }
+.valley-bag button[aria-selected="true"] { outline: 2.5px solid var(--ink); outline-offset: 1px; background: var(--butter); color: var(--ink); }
+.valley-bag button[aria-selected="true"]:hover:not(:disabled) { background: var(--butter); color: var(--ink); }
+.valley-bag button:disabled { opacity: .35; background: #eceae4; }
+.valley-bag b { position: absolute; right: 3px; bottom: 1px; font-size: 10px; }
+
+/* Talk */
+.valley-talk { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 8px; }
+.valley-line { margin: 0 0 6px; padding: 8px 10px; background: #fff; border: 1.5px solid var(--ink); border-radius: 0 10px 10px 10px; }
+.valley-hearts { color: #c27d78; letter-spacing: 1px; font-size: 14px; }
+.valley-hearts i { font-style: normal; color: #d9d6cf; }
+
+/* Share */
+.valley-share { margin: 6px 0 12px; padding: 10px; background: #fff; border: 1.5px solid var(--ink); }
+.valley-share h3 { margin: 0 0 8px; font-size: 13px; }
+.valley-share img, .valley-clip { display: block; width: 100%; height: auto; border: 1px solid var(--ink); image-rendering: auto; }
+.valley-clip { max-height: 46vh; object-fit: contain; background: #e3e0d6; }
+
+/* Music */
+.valley-music { display: grid; gap: 4px; margin: 8px 0; }
+.valley-music .valley-check { margin: 2px 0; }
+.valley-tracks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.valley-tracks button { box-shadow: none; padding: 5px 9px; font-size: 12px; text-align: left; }
+.valley-tracks button[aria-checked="true"] { background: var(--ink); color: var(--paper); }
+.valley-tracks small { display: block; font-size: 10px; opacity: .75; }
+
+/* Moonlight Market machine */
+.valley-machine { position: relative; width: 150px; height: 170px; margin: 0 auto 8px; }
+.valley-machine .dome { position: absolute; left: 25px; top: 0; width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--ink); background: radial-gradient(circle at 35% 30%, #fff 0 12%, #e5e2ee 13% 100%); overflow: hidden; }
+.valley-machine .dome i { position: absolute; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--ink); background: linear-gradient(180deg, #fff 50%, var(--c) 50%); }
+.valley-machine .body { position: absolute; left: 20px; top: 88px; width: 110px; height: 78px; background: var(--lavender); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.valley-machine .body b { position: absolute; left: 8px; top: 8px; font-size: 12px; }
+.valley-machine .chute { position: absolute; left: 14px; bottom: 10px; width: 34px; height: 24px; background: var(--ink); border-radius: 0 0 6px 6px; }
+.valley-machine .crank { position: absolute; right: 16px; top: 22px; width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--ink); background: #fff; }
+.valley-machine .crank::after { content: ""; position: absolute; left: 14px; top: -10px; width: 4px; height: 26px; background: var(--ink); border-radius: 2px; }
+.valley-machine[data-spin="true"] .crank { animation: valley-crank .5s linear infinite; }
+.valley-machine[data-spin="true"] .dome i { animation: valley-jiggle .25s ease-in-out infinite alternate; }
+@keyframes valley-crank { to { transform: rotate(360deg); } }
+@keyframes valley-jiggle { to { transform: translateY(-4px) rotate(12deg); } }
+.valley-collection { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-bottom: 10px; }
+.valley-collection > div { display: grid; justify-items: center; gap: 2px; padding: 6px; border: 1.5px solid var(--ink); background: #fff; text-align: center; font-size: 11px; }
+.valley-collection > div.locked { background: #eceae4; color: var(--muted); }
+.valley-collection small { color: var(--muted); font-size: 10px; }
+.valley-decor { width: 72px; height: 72px; }
+.valley-row .valley-decor { width: 48px; height: 48px; flex: none; }
+.valley-results { display: grid; gap: 8px; margin-bottom: 10px; }
+.valley-result { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 8px; border: 1.5px solid var(--ink); background: #fff; }
+.valley-result small { display: block; color: var(--muted); font-size: 11px; }
+.valley-capsule { width: 42px; height: 42px; border: 2px solid var(--ink); border-radius: 50%; background: linear-gradient(180deg, #fff 50%, var(--c, #cfccc4) 50%); position: relative; box-shadow: 2px 2px 0 var(--ink); animation: valley-pop .7s cubic-bezier(.2, 1.6, .4, 1) both; }
+.valley-capsule span { position: absolute; left: -2px; right: -2px; top: calc(50% - 1px); height: 2px; background: var(--ink); }
+.valley-reveal-1 { --c: #b4c3ab; } .valley-reveal-2 { --c: #b9bfc6; } .valley-reveal-3 { --c: #c6bed4; } .valley-reveal-4 { --c: #e2d49e; }
+.valley-reveal-4 .valley-capsule { box-shadow: 2px 2px 0 var(--ink), 0 0 0 6px #e2d7ad88; }
+@keyframes valley-pop { from { transform: scale(.3) rotate(-30deg); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .valley-capsule, .valley-sprout, .valley-rec.on, .valley-machine[data-spin="true"] .crank, .valley-machine[data-spin="true"] .dome i { animation: none; } .valley-clock i, .valley-energy i { transition: none; } }
+
+/* Phone-sized frames. */
+@media (max-width: 640px) {
+  .valley-game { font-size: 11px; }
+  .valley-hud { top: 6px; left: 6px; right: 6px; gap: 6px; }
+  .valley-card { min-width: 0; padding: 5px 7px; row-gap: 2px; column-gap: 6px; box-shadow: 2px 2px 0 var(--ink); }
+  .valley-portrait { width: 26px; height: 26px; grid-row: 1 / span 4; }
+  .valley-clock { display: none; }
+  .valley-title { font-size: 10px; letter-spacing: 0; }
+  .valley-wide { display: none; }
+  .valley-day { font-size: 9px; }
+  .valley-stats { gap: 7px; font-size: 10px; }
+  .valley-game button { min-height: 28px; padding: 3px 7px; box-shadow: 1px 1px 0 var(--ink); }
+  .valley-actions { gap: 4px; max-width: 52%; }
+  .valley-footer { bottom: 36px; gap: 5px; }
+  .valley-footer p { font-size: 9px; padding: 3px 6px; }
+  .valley-hotbar { gap: 3px; padding: 3px; box-shadow: 2px 2px 0 var(--ink); }
+  .valley-hotbar button { min-width: 46px; padding: 2px 3px; min-height: 40px; }
+  .valley-tool-label { font-size: 8px; }
+  .valley-game .rf-frame-menu-heading h2 { font-size: 12px; }
+  .valley-odds { font-size: 9px; }
+  .valley-collection { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+  .valley-share { padding: 6px; }
+}

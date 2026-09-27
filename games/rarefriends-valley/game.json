@@ -1,0 +1,27 @@
+{
+  "name": "RareFriends Valley",
+  "consumable": "Moonlight Blessing",
+  "price": "1000000000000000000",
+  "outcomes": [
+    {
+      "name": "Sprout Charm",
+      "chanceBps": 6000,
+      "reward": "500000000000000000"
+    },
+    {
+      "name": "Silver Dew",
+      "chanceBps": 2800,
+      "reward": "1000000000000000000"
+    },
+    {
+      "name": "Moon Bloom",
+      "chanceBps": 1000,
+      "reward": "2000000000000000000"
+    },
+    {
+      "name": "Golden Harvest",
+      "chanceBps": 200,
+      "reward": "5000000000000000000"
+    }
+  ]
+}
